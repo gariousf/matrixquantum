@@ -8,6 +8,9 @@ import { Loader2, TerminalIcon, Zap, Volume2, VolumeX } from "lucide-react"
 import MatrixRain from "./matrix-rain"
 import QuantumCircuit from "./quantum-circuit"
 import { useSoundEffects } from "./sound-effects"
+import ContractInfo from "./contract-info"
+
+const CONTRACT_ADDRESS = "12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump"
 
 const COMMANDS = {
   HELP: "help",
@@ -21,6 +24,7 @@ const COMMANDS = {
   GAME: "game",
   SOUND: "sound",
   EASTER: "neo",
+  CONTRACT: "contract",
 }
 
 const QUANTUM_STATES = ["|0⟩", "|1⟩", "|+⟩", "|-⟩", "|Ψ⟩", "1/√2(|00⟩ + |11⟩)"]
@@ -44,6 +48,7 @@ export default function QuantumTerminal() {
   const [loading, setLoading] = useState(false)
   const [showRain, setShowRain] = useState(false)
   const [showCircuit, setShowCircuit] = useState(false)
+  const [showContract, setShowContract] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [gameActive, setGameActive] = useState(false)
   const [decryptProgress, setDecryptProgress] = useState(0)
@@ -72,6 +77,7 @@ export default function QuantumTerminal() {
       addToHistory(`  ${COMMANDS.DECRYPT} - Decrypt encrypted message`)
       addToHistory(`  ${COMMANDS.GAME}    - Play a mini-game`)
       addToHistory(`  ${COMMANDS.SOUND}   - Toggle sound effects`)
+      addToHistory(`  ${COMMANDS.CONTRACT} - Display contract address`)
       addToHistory(`  ${COMMANDS.EXIT}    - Exit terminal`)
     } else if (command === COMMANDS.CLEAR) {
       setHistory(["MATRIX QUANTUM TERMINAL v1.0", ""])
@@ -94,6 +100,11 @@ export default function QuantumTerminal() {
     } else if (command === COMMANDS.SOUND) {
       setSoundEnabled(!soundEnabled)
       addToHistory(`Sound effects ${!soundEnabled ? "enabled" : "disabled"}`)
+    } else if (command === COMMANDS.CONTRACT) {
+      addToHistory("MQT Contract Address:")
+      addToHistory(`CA: ${CONTRACT_ADDRESS}`)
+      setShowContract(true)
+      if (soundEnabled) playSound("success")
     } else if (command === COMMANDS.EXIT) {
       if (soundEnabled) playSound("error")
       addToHistory("Cannot exit the Matrix. You are already too deep.")
@@ -290,6 +301,10 @@ export default function QuantumTerminal() {
           <div className="my-4 border border-green-500 p-2 bg-black/50">
             <QuantumCircuit />
           </div>
+        )}
+
+        {showContract && (
+          <ContractInfo address={CONTRACT_ADDRESS} />
         )}
       </div>
 
