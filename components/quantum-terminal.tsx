@@ -18,7 +18,7 @@ import GPRTheory from "./gpr-theory"
 import RydbergSimulator from "./rydberg-simulator"
 import RydbergTheory from "./rydberg-theory"
 
-const CONTRACT_ADDRESS = "12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump"
+const CONTRACT_ADDRESS = "To be announced"
 
 const COMMANDS = {
   HELP: "help",
