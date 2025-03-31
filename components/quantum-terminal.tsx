@@ -13,6 +13,10 @@ import QuantumMatrixFunction from "./quantum-matrix-function"
 import MathExplanation from "./math-explanation"
 import QuantumMagnetism from "./quantum-magnetism"
 import MagnetismTheory from "./magnetism-theory"
+import QuantumGPR from "./quantum-gpr"
+import GPRTheory from "./gpr-theory"
+import RydbergSimulator from "./rydberg-simulator"
+import RydbergTheory from "./rydberg-theory"
 
 const CONTRACT_ADDRESS = "12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump"
 
@@ -33,6 +37,10 @@ const COMMANDS = {
   MATH_THEORY: "maththeory",
   MAGNETISM: "magnetism",
   MAGTHEORY: "magtheory",
+  GPR: "gpr",
+  GPRTHEORY: "gprtheory",
+  RYDBERG: "rydberg",
+  RYDTHEORY: "rydtheory",
 }
 
 const QUANTUM_STATES = ["|0⟩", "|1⟩", "|+⟩", "|-⟩", "|Ψ⟩", "1/√2(|00⟩ + |11⟩)"]
@@ -64,6 +72,10 @@ export default function QuantumTerminal() {
   const [showMathTheory, setShowMathTheory] = useState(false)
   const [showMagnetism, setShowMagnetism] = useState(false)
   const [showMagTheory, setShowMagTheory] = useState(false)
+  const [showGPR, setShowGPR] = useState(false)
+  const [showGPRTheory, setShowGPRTheory] = useState(false)
+  const [showRydberg, setShowRydberg] = useState(false)
+  const [showRydTheory, setShowRydTheory] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { playSound } = useSoundEffects()
@@ -73,12 +85,17 @@ export default function QuantumTerminal() {
     if (soundEnabled) playSound("keypress")
   }
 
-  const handleCommand = (cmd: string) => {
-    addToHistory(`> ${cmd}`)
-
-    const command = cmd.trim().toLowerCase()
-
-    if (command === COMMANDS.HELP) {
+  const handleCommand = (command: string) => {
+    if (!command) return
+    
+    // Add command to history
+    addToHistory(`> ${command}`)
+    
+    // Process command
+    const normalizedCommand = command.trim().toLowerCase()
+    
+    if (normalizedCommand === COMMANDS.HELP) {
+      // Help command logic
       addToHistory("Available commands:")
       addToHistory(`  ${COMMANDS.HELP}    - Show this help message`)
       addToHistory(`  ${COMMANDS.CLEAR}   - Clear terminal`)
@@ -92,65 +109,126 @@ export default function QuantumTerminal() {
       addToHistory(`  ${COMMANDS.CONTRACT} - Display contract address`)
       addToHistory(`  ${COMMANDS.MATRIX_FUNC} - Run quantum matrix function algorithm`)
       addToHistory(`  ${COMMANDS.MATH_THEORY} - Show mathematical theory`)
-      addToHistory(`  ${COMMANDS.EXIT}    - Exit terminal`)
       addToHistory(`  ${COMMANDS.MAGNETISM} - Run quantum magnetism simulation`)
       addToHistory(`  ${COMMANDS.MAGTHEORY} - Show magnetism theory`)
-    } else if (command === COMMANDS.CLEAR) {
+      addToHistory(`  ${COMMANDS.GPR} - Run quantum GPR simulation`)
+      addToHistory(`  ${COMMANDS.GPRTHEORY} - Show GPR theory`)
+      addToHistory(`  ${COMMANDS.RYDBERG} - Run Rydberg atom simulation`)
+      addToHistory(`  ${COMMANDS.RYDTHEORY} - Show Rydberg theory`)
+      addToHistory(`  ${COMMANDS.EXIT}    - Exit terminal`)
+      if (soundEnabled) playSound("success")
+    } else if (normalizedCommand === COMMANDS.CLEAR) {
+      // Clear command logic
       setHistory(["MATRIX QUANTUM TERMINAL v1.0", ""])
-    } else if (command === COMMANDS.MATRIX) {
-      setShowRain(!showRain)
-      if (soundEnabled) playSound("matrix")
-      addToHistory(`Matrix code rain ${!showRain ? "activated" : "deactivated"}`)
-    } else if (command === COMMANDS.QUANTUM) {
+      setShowCircuit(false)
+      setShowMatrixFunc(false)
+      setShowMathTheory(false)
+      setShowContract(false)
+      setShowMagnetism(false)
+      setShowMagTheory(false)
+      setShowGPR(false)
+      setShowGPRTheory(false)
+      setShowRydberg(false)
+      setShowRydTheory(false)
+      if (soundEnabled) playSound("success")
+    } else if (normalizedCommand === COMMANDS.MATRIX) {
+      // Toggle the Matrix rain effect
+      const newRainState = !showRain;
+      setShowRain(newRainState);
+      
+      // Play appropriate sound effect
+      if (soundEnabled) playSound("matrix");
+      
+      // Add message to terminal history
+      addToHistory(`Matrix code rain ${newRainState ? "activated" : "deactivated"}`);
+      
+      // Ensure input focus is maintained after toggling Matrix rain
+      // Use a slightly longer timeout to ensure the DOM has updated
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
+    } else if (normalizedCommand === COMMANDS.QUANTUM) {
       setShowCircuit(true)
       if (soundEnabled) playSound("quantum")
       addToHistory("Quantum circuit initialized")
-    } else if (command === COMMANDS.RUN) {
+    } else if (normalizedCommand === COMMANDS.RUN) {
       runQuantumSimulation()
-    } else if (command === COMMANDS.HACK) {
+    } else if (normalizedCommand === COMMANDS.HACK) {
       hackMainframe()
-    } else if (command === COMMANDS.DECRYPT) {
+    } else if (normalizedCommand === COMMANDS.DECRYPT) {
       decryptMessage()
-    } else if (command === COMMANDS.GAME) {
+    } else if (normalizedCommand === COMMANDS.GAME) {
       startGame()
-    } else if (command === COMMANDS.SOUND) {
+    } else if (normalizedCommand === COMMANDS.SOUND) {
       setSoundEnabled(!soundEnabled)
       addToHistory(`Sound effects ${!soundEnabled ? "enabled" : "disabled"}`)
-    } else if (command === COMMANDS.CONTRACT) {
+    } else if (normalizedCommand === COMMANDS.CONTRACT) {
       addToHistory("MQT Contract Address:")
       addToHistory(`CA: ${CONTRACT_ADDRESS}`)
       setShowContract(true)
       if (soundEnabled) playSound("success")
-    } else if (command === COMMANDS.MATRIX_FUNC) {
+    } else if (normalizedCommand === COMMANDS.MATRIX_FUNC) {
       addToHistory("Initializing Quantum Matrix Function Algorithm...")
       addToHistory("Using Cauchy's Integral Formula for f(A)b computation")
       setShowMatrixFunc(true)
       if (soundEnabled) playSound("quantum")
-    } else if (command === COMMANDS.MATH_THEORY) {
+    } else if (normalizedCommand === COMMANDS.MATH_THEORY) {
       addToHistory("Displaying mathematical theory of quantum matrix functions...")
       setShowMathTheory(true)
       if (soundEnabled) playSound("quantum")
-    } else if (command === COMMANDS.EXIT) {
+    } else if (normalizedCommand === COMMANDS.EXIT) {
       if (soundEnabled) playSound("error")
       addToHistory("Cannot exit the Matrix. You are already too deep.")
-    } else if (command === COMMANDS.EASTER) {
+    } else if (normalizedCommand === COMMANDS.EASTER) {
       addToHistory(MATRIX_ASCII)
       addToHistory("Wake up, Neo...")
       addToHistory("The Matrix has you...")
       if (soundEnabled) playSound("success")
-    } else if (command === COMMANDS.MAGNETISM) {
+    } else if (normalizedCommand === COMMANDS.MAGNETISM) {
       addToHistory("Initializing quantum magnetism simulation...")
       addToHistory("Simulating Ising spin chain with tunable interactions")
       setShowMagnetism(true)
       if (soundEnabled) playSound("quantum")
-    } else if (command === COMMANDS.MAGTHEORY) {
+    } else if (normalizedCommand === COMMANDS.MAGTHEORY) {
       addToHistory("Displaying quantum magnetism theoretical background...")
       setShowMagTheory(true)
       if (soundEnabled) playSound("quantum")
-    } else if (command) {
+    } else if (normalizedCommand === COMMANDS.GPR) {
+      addToHistory("Initializing Quantum Gaussian Process Regression...")
+      addToHistory("Demonstrating exponential speedup via quantum linear systems algorithm")
+      setShowGPR(true)
+      if (soundEnabled) playSound("quantum")
+    } else if (normalizedCommand === COMMANDS.GPRTHEORY) {
+      addToHistory("Displaying Quantum GPR theoretical background...")
+      setShowGPRTheory(true)
+      if (soundEnabled) playSound("quantum")
+    } else if (normalizedCommand === COMMANDS.RYDBERG) {
+      addToHistory("Initializing Rydberg atom quantum simulator...")
+      addToHistory("Simulating n-body interactions in exotic spin models")
+      setShowRydberg(true)
+      if (soundEnabled) playSound("quantum")
+    } else if (normalizedCommand === COMMANDS.RYDTHEORY) {
+      addToHistory("Displaying Rydberg quantum simulator theoretical background...")
+      setShowRydTheory(true)
+      if (soundEnabled) playSound("quantum")
+    } else {
+      // Unknown command
+      addToHistory(`Command not recognized: ${command}`)
+      addToHistory("Type 'help' for available commands")
       if (soundEnabled) playSound("error")
-      addToHistory(`Command not recognized: ${cmd}`)
     }
+    
+    // Clear input field
+    setInput("")
+    
+    // Scroll to bottom
+    setTimeout(() => {
+      if (terminalRef.current) {
+        terminalRef.current.scrollTop = terminalRef.current.scrollHeight
+      }
+    }, 10)
   }
 
   const runQuantumSimulation = () => {
@@ -273,9 +351,22 @@ export default function QuantumTerminal() {
       } else {
         handleCommand(input)
       }
-      setInput("")
     }
   }
+
+  useEffect(() => {
+    // Focus the input when the component mounts
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+    
+    // Re-focus input when Matrix rain state changes (both on and off)
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
+  }, [showRain])
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -317,7 +408,11 @@ export default function QuantumTerminal() {
         </div>
       </div>
 
-      <div ref={terminalRef} className="h-[calc(100%-80px)] overflow-y-auto p-4 font-mono text-green-500 relative">
+      <div 
+        ref={terminalRef} 
+        className="h-[calc(100%-80px)] overflow-y-auto p-4 font-mono text-green-500 relative"
+        onClick={() => inputRef.current?.focus()}
+      >
         {history.map((line, i) => (
           <div key={i} className="whitespace-pre-wrap mb-1">
             {line}
@@ -374,6 +469,42 @@ export default function QuantumTerminal() {
         {showMagTheory && (
           <div className="my-4 border border-green-500 p-2 bg-black/50">
             <MagnetismTheory />
+          </div>
+        )}
+
+        {showGPR && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <QuantumGPR 
+              onComplete={() => {
+                if (soundEnabled) playSound("success")
+                addToHistory("Quantum GPR simulation complete!")
+                addToHistory("Achieved exponential speedup over classical algorithm.")
+              }}
+            />
+          </div>
+        )}
+
+        {showGPRTheory && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <GPRTheory />
+          </div>
+        )}
+
+        {showRydberg && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <RydbergSimulator 
+              onComplete={() => {
+                if (soundEnabled) playSound("success")
+                addToHistory("Rydberg quantum simulation complete!")
+                addToHistory("Successfully simulated n-body interactions in exotic spin models.")
+              }}
+            />
+          </div>
+        )}
+
+        {showRydTheory && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <RydbergTheory />
           </div>
         )}
       </div>
