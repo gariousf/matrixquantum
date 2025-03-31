@@ -3,8 +3,9 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: '$MQT',
-  description: 'Matrix Quantum Terminal - Explore the quantum realm with contract CA: 12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump',
+  description: 'Matrix Quantum Terminal - Explore the quantum realm with advanced algorithms like Cauchy\'s integral formula for matrix functions. Contract CA: 12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump',
   generator: 'MQT',
+  keywords: ['quantum computing', 'matrix functions', 'Cauchy integral', 'blockchain'],
 }
 
 export default function RootLayout({

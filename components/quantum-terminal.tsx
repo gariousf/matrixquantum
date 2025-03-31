@@ -9,6 +9,10 @@ import MatrixRain from "./matrix-rain"
 import QuantumCircuit from "./quantum-circuit"
 import { useSoundEffects } from "./sound-effects"
 import ContractInfo from "./contract-info"
+import QuantumMatrixFunction from "./quantum-matrix-function"
+import MathExplanation from "./math-explanation"
+import QuantumMagnetism from "./quantum-magnetism"
+import MagnetismTheory from "./magnetism-theory"
 
 const CONTRACT_ADDRESS = "12ajpBibVyBiiyK7jCamwk2KxBGSfszUL7nqoMFJpump"
 
@@ -25,6 +29,10 @@ const COMMANDS = {
   SOUND: "sound",
   EASTER: "neo",
   CONTRACT: "contract",
+  MATRIX_FUNC: "matrixfunc",
+  MATH_THEORY: "maththeory",
+  MAGNETISM: "magnetism",
+  MAGTHEORY: "magtheory",
 }
 
 const QUANTUM_STATES = ["|0⟩", "|1⟩", "|+⟩", "|-⟩", "|Ψ⟩", "1/√2(|00⟩ + |11⟩)"]
@@ -52,6 +60,10 @@ export default function QuantumTerminal() {
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [gameActive, setGameActive] = useState(false)
   const [decryptProgress, setDecryptProgress] = useState(0)
+  const [showMatrixFunc, setShowMatrixFunc] = useState(false)
+  const [showMathTheory, setShowMathTheory] = useState(false)
+  const [showMagnetism, setShowMagnetism] = useState(false)
+  const [showMagTheory, setShowMagTheory] = useState(false)
   const terminalRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { playSound } = useSoundEffects()
@@ -78,7 +90,11 @@ export default function QuantumTerminal() {
       addToHistory(`  ${COMMANDS.GAME}    - Play a mini-game`)
       addToHistory(`  ${COMMANDS.SOUND}   - Toggle sound effects`)
       addToHistory(`  ${COMMANDS.CONTRACT} - Display contract address`)
+      addToHistory(`  ${COMMANDS.MATRIX_FUNC} - Run quantum matrix function algorithm`)
+      addToHistory(`  ${COMMANDS.MATH_THEORY} - Show mathematical theory`)
       addToHistory(`  ${COMMANDS.EXIT}    - Exit terminal`)
+      addToHistory(`  ${COMMANDS.MAGNETISM} - Run quantum magnetism simulation`)
+      addToHistory(`  ${COMMANDS.MAGTHEORY} - Show magnetism theory`)
     } else if (command === COMMANDS.CLEAR) {
       setHistory(["MATRIX QUANTUM TERMINAL v1.0", ""])
     } else if (command === COMMANDS.MATRIX) {
@@ -105,6 +121,15 @@ export default function QuantumTerminal() {
       addToHistory(`CA: ${CONTRACT_ADDRESS}`)
       setShowContract(true)
       if (soundEnabled) playSound("success")
+    } else if (command === COMMANDS.MATRIX_FUNC) {
+      addToHistory("Initializing Quantum Matrix Function Algorithm...")
+      addToHistory("Using Cauchy's Integral Formula for f(A)b computation")
+      setShowMatrixFunc(true)
+      if (soundEnabled) playSound("quantum")
+    } else if (command === COMMANDS.MATH_THEORY) {
+      addToHistory("Displaying mathematical theory of quantum matrix functions...")
+      setShowMathTheory(true)
+      if (soundEnabled) playSound("quantum")
     } else if (command === COMMANDS.EXIT) {
       if (soundEnabled) playSound("error")
       addToHistory("Cannot exit the Matrix. You are already too deep.")
@@ -113,6 +138,15 @@ export default function QuantumTerminal() {
       addToHistory("Wake up, Neo...")
       addToHistory("The Matrix has you...")
       if (soundEnabled) playSound("success")
+    } else if (command === COMMANDS.MAGNETISM) {
+      addToHistory("Initializing quantum magnetism simulation...")
+      addToHistory("Simulating Ising spin chain with tunable interactions")
+      setShowMagnetism(true)
+      if (soundEnabled) playSound("quantum")
+    } else if (command === COMMANDS.MAGTHEORY) {
+      addToHistory("Displaying quantum magnetism theoretical background...")
+      setShowMagTheory(true)
+      if (soundEnabled) playSound("quantum")
     } else if (command) {
       if (soundEnabled) playSound("error")
       addToHistory(`Command not recognized: ${cmd}`)
@@ -305,6 +339,42 @@ export default function QuantumTerminal() {
 
         {showContract && (
           <ContractInfo address={CONTRACT_ADDRESS} />
+        )}
+
+        {showMatrixFunc && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <QuantumMatrixFunction 
+              onComplete={() => {
+                if (soundEnabled) playSound("success")
+                addToHistory("Matrix function computation complete!")
+                addToHistory("Successfully computed f(A)b using quantum algorithm.")
+              }}
+            />
+          </div>
+        )}
+
+        {showMathTheory && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <MathExplanation />
+          </div>
+        )}
+
+        {showMagnetism && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <QuantumMagnetism 
+              onComplete={() => {
+                if (soundEnabled) playSound("success")
+                addToHistory("Quantum magnetism simulation complete!")
+                addToHistory("Observed phase transition from paramagnetic to antiferromagnetic ordering.")
+              }}
+            />
+          </div>
+        )}
+
+        {showMagTheory && (
+          <div className="my-4 border border-green-500 p-2 bg-black/50">
+            <MagnetismTheory />
+          </div>
         )}
       </div>
 
